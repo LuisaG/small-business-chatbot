@@ -9,5 +9,6 @@ import { GeocodeModule } from '../geocode/geocode.module';
   imports: [ConfigModule, CommonModule, GeocodeModule],
   controllers: [WeatherController],
   providers: [WeatherService],
+  exports: [WeatherService],
 })
 export class WeatherModule {}

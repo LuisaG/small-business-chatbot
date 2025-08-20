@@ -6,6 +6,7 @@ const configSchema = z.object({
   nominatimUserAgent: z.string(),
   tomorrowApiKey: z.string(),
   tomorrowFields: z.string().default('temperature,weatherCode'),
+  openApiKey: z.string(),
 });
 
 export type Config = z.infer<typeof configSchema>;
@@ -17,6 +18,7 @@ export const configuration = (): Config => {
     nominatimUserAgent: process.env.NOMINATIM_USER_AGENT,
     tomorrowApiKey: process.env.TOMORROW_API_KEY,
     tomorrowFields: process.env.TOMORROW_FIELDS,
+    openApiKey: process.env.OPEN_API_KEY,
   });
 
   return config;
