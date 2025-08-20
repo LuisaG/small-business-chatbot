@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { WeatherService } from '../weather/weather.service';
+import { RagService } from '../common/rag/rag.service';
 import { ChatMessageDto, ChatResponseDto } from './dto/chat.dto';
 import { Config } from '../config/configuration';
 
@@ -24,6 +25,7 @@ export class ChatService {
   constructor(
     private readonly configService: ConfigService<Config>,
     private readonly weatherService: WeatherService,
+    private readonly ragService: RagService,
   ) {}
 
   async processMessage(chatMessage: ChatMessageDto): Promise<ChatResponseDto> {
@@ -49,8 +51,12 @@ export class ChatService {
       }
     }
 
+    // Retrieve relevant business information using RAG
+    const relevantChunks = this.ragService.retrieveRelevantChunks(message);
+    const businessContext = this.ragService.formatChunksForPrompt(relevantChunks);
+
     // Create system prompt based on available information
-    const systemPrompt = this.createSystemPrompt(businessName, businessType, locationToUse, weatherInfo);
+    const systemPrompt = this.createSystemPrompt(businessName, businessType, locationToUse, weatherInfo, businessContext);
 
     // Generate response using OpenAI streaming API
     const response = await this.generateResponse(message, systemPrompt);
@@ -82,25 +88,20 @@ export class ChatService {
     businessName: string | undefined,
     businessType: string | undefined,
     location: string,
-    weatherInfo: any
+    weatherInfo: any,
+    businessContext: string
   ): string {
-    let prompt = `You are a helpful assistant for a ${businessType || 'business'} located in ${location}. `;
+    let prompt = `You are the assistant for ${businessName || 'The Cellar'}. Answer ONLY using the business-info.yaml file for business information. If business info is not in the file, say you don't have it and offer to connect them to the business. Never guess or use other sources.
 
-    if (businessName) {
-      prompt += `The business name is ${businessName}. `;
-    }
-
-    prompt += `Be friendly, professional, and helpful. Keep responses concise but informative. `;
+Allowed topics: hours, menu highlights, patio & pets, weather (use weather API), contact/directions. Keep replies ≤2 short sentences. If out of scope or missing data: brief apology + offer to connect.`;
 
     if (weatherInfo) {
-      prompt += `\n\nCurrent weather information for ${location}:
-- Temperature: ${weatherInfo.tempF}°F (${weatherInfo.tempC}°C)
-- Location: ${weatherInfo.location}
-
-If the user asks about weather, incorporate this information naturally into your response. `;
+      prompt += `\n\nCurrent weather: ${weatherInfo.tempF}°F (${weatherInfo.tempC}°C) in ${weatherInfo.location}.`;
     }
 
-    prompt += `\n\nIf you don't have specific information about something, be honest and suggest they contact the business directly.`;
+    if (businessContext) {
+      prompt += businessContext;
+    }
 
     return prompt;
   }
@@ -124,11 +125,11 @@ If the user asks about weather, incorporate this information naturally into your
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: 'gpt-3.5-turbo',
+          model: 'gpt-4.1-mini',
           messages,
-          stream: false, // For simplicity, we'll use non-streaming first
+          stream: false, // TODO: Luisa get back and use the actual stream option
           max_tokens: 500,
-          temperature: 0.7,
+          temperature: 0.3,
         }),
       });
 
@@ -165,8 +166,8 @@ If the user asks about weather, incorporate this information naturally into your
         model: 'gpt-3.5-turbo',
         messages,
         stream: true,
-        max_tokens: 500,
-        temperature: 0.7,
+        max_tokens: 250,
+        temperature: 0.3,
       }),
     });
 
