@@ -5,6 +5,7 @@ import { LoggerModule } from 'nestjs-pino';
 import { HealthModule } from './health/health.module';
 import { WeatherModule } from './weather/weather.module';
 import { ChatModule } from './chat/chat.module';
+import { RouterModule } from './router/router.module';
 import { CommonModule } from './common/common.module';
 import { configuration } from './config/configuration';
 
@@ -51,6 +52,7 @@ import { configuration } from './config/configuration';
     HealthModule,
     WeatherModule,
     ChatModule,
+    RouterModule,
     CommonModule,
   ],
 })

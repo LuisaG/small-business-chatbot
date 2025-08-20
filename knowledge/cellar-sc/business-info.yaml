@@ -1,0 +1,32 @@
+business:
+  id: cellar-sc
+  name: The Cellar
+  type: wine_bar_cafe
+  timezone: America/Los_Angeles
+  address: '156 Avenida Del Mar, San Clemente, CA 92672'
+  contact:
+    phone: '(949) 492-3663'
+    email: 'ask@thecellarsite.com'
+    website: 'https://thecellarsite.com'
+hours:
+  regular:
+    tue: '11:00 AM – 10:00 PM'
+    wed: '11:00 AM – 10:00 PM'
+    thu: '11:00 AM – 10:00 PM'
+    fri: '11:00 AM – 11:00 PM'
+    sat: '10:00 AM – 11:00 PM'
+    sun: '10:00 AM – 3:00 PM'
+  service_notes:
+    brunch: 'Sat & Sun 10:00 AM – 3:00 PM'
+    lunch: 'Tue–Fri 11:00 AM – 3:00 PM'
+    happy_hour: 'Tue–Fri 3:00 PM – 6:00 PM'
+    dinner: 'Tue–Sun 5:00 PM – 9:00 PM'
+policies:
+  reservations: 'First-come, first-serve; no reservations'
+  pets: 'Dog-friendly patio'
+amenities:
+  music: 'Live music schedule (see site)'
+meta:
+  last_updated: '2025-08-20'
+  sources:
+    - 'https://thecellarsite.com/'
