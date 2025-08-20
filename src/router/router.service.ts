@@ -20,9 +20,35 @@ export class RouterService {
     'pastries', 'food', 'cater', 'catering', 'wedding', 'weddings', 'event', 'events'
   ];
 
+  private readonly businessMappings = {
+    'the cellar': 'cellar-sc',
+    'cellar': 'cellar-sc',
+    'cellar sc': 'cellar-sc',
+    'blue bottle': 'blue-bottle-sf',
+    'blue bottle coffee': 'blue-bottle-sf',
+    'starbucks': 'starbucks',
+    'mcdonalds': 'mcdonalds',
+    'subway': 'subway',
+    'pizza hut': 'pizza-hut',
+    'dominos': 'dominos',
+    'kfc': 'kfc',
+    'burger king': 'burger-king',
+    'wendys': 'wendys',
+    'taco bell': 'taco-bell',
+    'chipotle': 'chipotle',
+    'panera': 'panera',
+    'dunkin': 'dunkin',
+    'dunkin donuts': 'dunkin',
+    'peets': 'peets',
+    'peets coffee': 'peets',
+  };
+
   async routeMessage(input: RouterInputDto): Promise<RouterOutputDto> {
-    const { message, businessId = 'cellar-sc' } = input;
+    const { message, businessId } = input;
     const lowerMessage = message.toLowerCase();
+
+    // Infer business ID from message if not provided
+    const inferredBusinessId = businessId || this.inferBusinessId(lowerMessage);
 
     // Check for weather keywords
     const hasWeather = this.weatherKeywords.some(keyword =>
@@ -52,13 +78,13 @@ export class RouterService {
     // Extract business facets
     const businessFacets = this.extractBusinessFacets(lowerMessage);
 
-    this.logger.debug(`Routed message to: ${route} with facets: ${businessFacets.join(', ')}`);
+    this.logger.debug(`Routed message to: ${route} with facets: ${businessFacets.join(', ')} for business: ${inferredBusinessId}`);
 
     return {
       route,
       location: {
         type: 'business_id',
-        value: businessId,
+        value: inferredBusinessId,
       },
       timeframe,
       business_facets: businessFacets,
@@ -126,5 +152,19 @@ export class RouterService {
     }
 
     return facets;
+  }
+
+  private inferBusinessId(message: string): string {
+    // Check for business names in the message
+    for (const [businessName, businessId] of Object.entries(this.businessMappings)) {
+      if (message.includes(businessName)) {
+        this.logger.debug(`Inferred business ID: ${businessId} from message containing "${businessName}"`);
+        return businessId;
+      }
+    }
+
+    // Default fallback
+    this.logger.debug('No business name detected, using default: cellar-sc');
+    return 'cellar-sc';
   }
 }

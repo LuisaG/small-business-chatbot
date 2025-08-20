@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const RouterInputSchema = z.object({
   message: z.string().min(1),
-  businessId: z.string().optional().default('cellar-sc'),
+  businessId: z.string().optional(),
 });
 
 export const RouterOutputSchema = z.object({

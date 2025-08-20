@@ -110,7 +110,17 @@ describe('RouterService', () => {
       expect(result.business_facets).toContain('seating');
     });
 
-    it('should use default businessId when not provided', async () => {
+    it('should infer businessId from message when not provided', async () => {
+      const input: RouterInputDto = {
+        message: 'What is the weather like at The Cellar?',
+      };
+
+      const result = await service.routeMessage(input);
+
+      expect(result.location.value).toBe('cellar-sc');
+    });
+
+    it('should use default businessId when no business name is detected', async () => {
       const input: RouterInputDto = {
         message: 'What is the weather?',
       };
@@ -118,6 +128,18 @@ describe('RouterService', () => {
       const result = await service.routeMessage(input);
 
       expect(result.location.value).toBe('cellar-sc');
+    });
+
+    it('should infer different business IDs based on message content', async () => {
+      const input: RouterInputDto = {
+        message: 'What are the hours at Blue Bottle Coffee?',
+      };
+
+      const result = await service.routeMessage(input);
+
+      expect(result.location.value).toBe('blue-bottle-sf');
+      expect(result.route).toBe('business');
+      expect(result.business_facets).toContain('hours');
     });
 
     it('should handle various weather keywords', async () => {
