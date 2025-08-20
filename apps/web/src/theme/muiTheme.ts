@@ -16,10 +16,10 @@ export const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: 'Roboto, Arial, sans-serif',
+    fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
   },
   shape: {
-    borderRadius: 16,
+    borderRadius: 12,
   },
   components: {
     MuiAppBar: {
@@ -79,14 +79,14 @@ export const chatBubbleStyles = {
   assistant: {
     backgroundColor: '#FFF8F1', // very light peach
     color: '#141414',
-    marginLeft: '16px',
+    marginLeft: '0px',
     marginRight: 'auto',
   },
   common: {
-    borderRadius: 16,
+    borderRadius: 4,
     border: '1px solid #E6E2DA',
     boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-    maxWidth: '75%',
+    maxWidth: '85%',
     padding: '12px 16px',
     marginBottom: '12px',
   },

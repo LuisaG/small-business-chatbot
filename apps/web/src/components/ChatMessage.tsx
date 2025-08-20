@@ -9,7 +9,7 @@ interface ChatMessageProps {
 
 export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
   const isUser = message.role === 'user';
-  
+
   const bubbleStyle = {
     ...chatBubbleStyles.common,
     ...(isUser ? chatBubbleStyles.user : chatBubbleStyles.assistant),
@@ -22,13 +22,13 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
         sx={{
           color: '#5B6770',
           fontWeight: 500,
-          marginBottom: '4px',
+          marginBottom: '2px',
           display: 'block',
         }}
       >
         {isUser ? 'You' : 'Cellar Host'}
       </Typography>
-      <Typography variant="body1" sx={{ lineHeight: 1.5 }}>
+      <Typography variant="body1" sx={{ lineHeight: 1.4, margin: 0 }}>
         {message.content}
         {message.status === 'streaming' && (
           <Box

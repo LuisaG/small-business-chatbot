@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Box, Container } from '@mui/material';
+import { Box } from '@mui/material';
 import { ChatMessage } from './ChatMessage';
 import { useChatStore } from '../store/chatStore';
 
@@ -42,10 +42,10 @@ export const ChatTimeline: React.FC = () => {
         overflow: 'auto',
         backgroundColor: '#FAF7F2',
         paddingY: '16px',
-        paddingX: '24px',
+        paddingX: '8px',
       }}
     >
-      <Box sx={{ display: 'flex', flexDirection: 'column', maxWidth: '800px', margin: '0 auto' }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
         {messages.map((message) => (
           <ChatMessage key={message.id} message={message} />
         ))}
