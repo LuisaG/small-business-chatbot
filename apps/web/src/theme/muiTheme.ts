@@ -87,7 +87,7 @@ export const chatBubbleStyles = {
     border: '1px solid #E6E2DA',
     boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
     maxWidth: '85%',
-    padding: '12px 16px',
+    padding: '16px 20px',
     marginBottom: '12px',
   },
 };
