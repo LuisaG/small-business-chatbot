@@ -60,8 +60,8 @@ describe('ChatSimpleService', () => {
   describe('processMessage', () => {
     it('should process weather queries correctly', async () => {
       const routerResult = {
-        route: 'weather',
-        location: { type: 'business_id', value: 'cellar-sc' },
+        route: 'weather' as const,
+        location: { type: 'business_id' as const, value: 'cellar-sc' },
         timeframe: 'now',
         business_facets: [],
       };
@@ -109,8 +109,8 @@ describe('ChatSimpleService', () => {
 
     it('should process business queries correctly', async () => {
       const routerResult = {
-        route: 'business',
-        location: { type: 'business_id', value: 'cellar-sc' },
+        route: 'business' as const,
+        location: { type: 'business_id' as const, value: 'cellar-sc' },
         timeframe: 'now',
         business_facets: ['hours'],
       };
@@ -141,8 +141,8 @@ describe('ChatSimpleService', () => {
 
     it('should process combined queries correctly', async () => {
       const routerResult = {
-        route: 'both',
-        location: { type: 'business_id', value: 'cellar-sc' },
+        route: 'both' as const,
+        location: { type: 'business_id' as const, value: 'cellar-sc' },
         timeframe: 'now',
         business_facets: ['menu', 'patio'],
       };

@@ -1,5 +1,7 @@
 # Dependencies
 node_modules/
+api/node_modules/
+apps/web/node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -13,7 +15,10 @@ yarn-error.log*
 
 # Build outputs
 dist/
+api/dist/
+apps/web/dist/
 build/
+apps/web/build/
 
 # Logs
 logs/
@@ -27,6 +32,8 @@ pids/
 
 # Coverage directory used by tools like istanbul
 coverage/
+api/coverage/
+apps/web/coverage/
 *.lcov
 
 # nyc test coverage
