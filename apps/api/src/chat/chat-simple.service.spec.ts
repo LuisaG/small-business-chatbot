@@ -98,7 +98,8 @@ describe('ChatSimpleService', () => {
         message: 'What is the weather like today?',
         businessName: 'The Cellar',
         businessType: 'wine_bar_cafe',
-        businessLocation: 'San Clemente, CA',
+        businessLocation: '156 Avenida Del Mar, San Clemente, CA 92672',
+        conversationId: undefined,
       });
 
       expect(result.route).toBe('weather');

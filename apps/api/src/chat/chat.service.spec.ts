@@ -2,12 +2,16 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import { ChatService } from './chat.service';
 import { WeatherService } from '../weather/weather.service';
+import { RagService } from '../common/rag/rag.service';
+import { DatabaseService } from '../database/database.service';
 import { ChatMessageDto } from './dto/chat.dto';
 
 describe('ChatService', () => {
   let service: ChatService;
   let weatherService: jest.Mocked<WeatherService>;
   let configService: jest.Mocked<ConfigService>;
+  let ragService: jest.Mocked<RagService>;
+  let databaseService: jest.Mocked<DatabaseService>;
 
   beforeEach(async () => {
     const mockWeatherService = {
@@ -16,6 +20,17 @@ describe('ChatService', () => {
 
     const mockConfigService = {
       get: jest.fn(),
+    };
+
+    const mockRagService = {
+      retrieveRelevantChunks: jest.fn().mockReturnValue([]),
+      formatChunksForPrompt: jest.fn().mockReturnValue(''),
+    };
+
+    const mockDatabaseService = {
+      createConversation: jest.fn().mockResolvedValue({ id: 'test-conversation-id' }),
+      addMessage: jest.fn().mockResolvedValue({}),
+      getConversationHistory: jest.fn().mockResolvedValue([]),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -29,12 +44,22 @@ describe('ChatService', () => {
           provide: ConfigService,
           useValue: mockConfigService,
         },
+        {
+          provide: RagService,
+          useValue: mockRagService,
+        },
+        {
+          provide: DatabaseService,
+          useValue: mockDatabaseService,
+        },
       ],
     }).compile();
 
     service = module.get<ChatService>(ChatService);
     weatherService = module.get(WeatherService);
     configService = module.get(ConfigService);
+    ragService = module.get(RagService);
+    databaseService = module.get(DatabaseService);
   });
 
   it('should be defined', () => {

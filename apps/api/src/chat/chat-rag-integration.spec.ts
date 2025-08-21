@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { ChatService } from './chat.service';
 import { WeatherService } from '../weather/weather.service';
 import { RagService } from '../common/rag/rag.service';
+import { DatabaseService } from '../database/database.service';
 
 // Mock global fetch
 global.fetch = jest.fn();
@@ -12,6 +13,7 @@ describe('ChatService RAG Integration', () => {
   let ragService: jest.Mocked<RagService>;
   let weatherService: jest.Mocked<WeatherService>;
   let configService: jest.Mocked<ConfigService>;
+  let databaseService: jest.Mocked<DatabaseService>;
 
   const mockRagChunks = [
     {
@@ -37,6 +39,12 @@ describe('ChatService RAG Integration', () => {
       get: jest.fn(),
     };
 
+    const mockDatabaseService = {
+      createConversation: jest.fn().mockResolvedValue({ id: 'test-conversation-id' }),
+      addMessage: jest.fn().mockResolvedValue({}),
+      getConversationHistory: jest.fn().mockResolvedValue([]),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ChatService,
@@ -52,6 +60,10 @@ describe('ChatService RAG Integration', () => {
           provide: RagService,
           useValue: mockRagService,
         },
+        {
+          provide: DatabaseService,
+          useValue: mockDatabaseService,
+        },
       ],
     }).compile();
 
@@ -59,6 +71,7 @@ describe('ChatService RAG Integration', () => {
     ragService = module.get(RagService);
     weatherService = module.get(WeatherService);
     configService = module.get(ConfigService);
+    databaseService = module.get(DatabaseService);
 
     // Setup default mocks
     configService.get.mockReturnValue('mock-api-key');

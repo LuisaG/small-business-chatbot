@@ -24,30 +24,34 @@ describe('RagService', () => {
         phone: '(949) 492-3663',
         email: 'ask@thecellarsite.com',
         website: 'https://thecellarsite.com'
-      },
-      hours: {
-        regular: {
-          tue: '11:00 AM – 10:00 PM',
-          wed: '11:00 AM – 10:00 PM',
-          thu: '11:00 AM – 10:00 PM',
-          fri: '11:00 AM – 11:00 PM',
-          sat: '10:00 AM – 11:00 PM',
-          sun: '10:00 AM – 3:00 PM'
-        },
-        service_notes: {
-          brunch: 'Sat & Sun 10:00 AM – 3:00 PM',
-          lunch: 'Tue–Fri 11:00 AM – 3:00 PM',
-          happy_hour: 'Tue–Fri 3:00 PM – 6:00 PM',
-          dinner: 'Tue–Sun 5:00 PM – 9:00 PM'
-        }
-      },
-      policies: {
-        reservations: 'First-come, first-serve; no reservations',
-        pets: 'Dog-friendly patio'
-      },
-      amenities: {
-        music: 'Live music schedule (see site)'
       }
+    },
+    hours: {
+      regular: {
+        tue: '11:00 AM – 10:00 PM',
+        wed: '11:00 AM – 10:00 PM',
+        thu: '11:00 AM – 10:00 PM',
+        fri: '11:00 AM – 11:00 PM',
+        sat: '10:00 AM – 11:00 PM',
+        sun: '10:00 AM – 3:00 PM'
+      },
+      service_notes: {
+        brunch: 'Sat & Sun 10:00 AM – 3:00 PM',
+        lunch: 'Tue–Fri 11:00 AM – 3:00 PM',
+        happy_hour: 'Tue–Fri 3:00 PM – 6:00 PM',
+        dinner: 'Tue–Sun 5:00 PM – 9:00 PM'
+      }
+    },
+    policies: {
+      reservations: 'First-come, first-serve; no reservations',
+      pets: 'Dog-friendly patio'
+    },
+    amenities: {
+      music: 'Live music schedule (see site)'
+    },
+    meta: {
+      last_updated: '2024-01-01',
+      sources: ['business-info.yaml']
     }
   };
 
@@ -55,7 +59,8 @@ describe('RagService', () => {
     // Reset mocks
     jest.clearAllMocks();
 
-    // Mock file system
+    // Mock file system before service instantiation
+    mockFs.existsSync.mockReturnValue(true);
     mockFs.readFileSync.mockReturnValue('mock yaml content');
     mockYaml.load.mockReturnValue(mockBusinessInfo);
 
@@ -71,6 +76,9 @@ describe('RagService', () => {
   });
 
   it('should load business info from YAML file', () => {
+    expect(mockFs.existsSync).toHaveBeenCalledWith(
+      expect.stringContaining('knowledge/cellar-sc/business-info.yaml')
+    );
     expect(mockFs.readFileSync).toHaveBeenCalledWith(
       expect.stringContaining('knowledge/cellar-sc/business-info.yaml'),
       'utf8'
