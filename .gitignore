@@ -98,6 +98,14 @@ jspm_packages/
 # OS generated files
 .DS_Store
 .DS_Store?
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+apps/api/*.db
+apps/api/*.sqlite
+apps/api/*.sqlite3
 ._*
 .Spotlight-V100
 .Trashes
