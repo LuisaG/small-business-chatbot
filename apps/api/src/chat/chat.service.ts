@@ -187,10 +187,10 @@ Allowed topics: hours, menu highlights, patio & pets, weather (use weather API),
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-3.5-turbo',
+        model: 'gpt-4.1-mini',
         messages,
         stream: true,
-        max_tokens: 250,
+        max_tokens: 500,
         temperature: 0.3,
       }),
     });

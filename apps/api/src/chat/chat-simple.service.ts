@@ -51,7 +51,7 @@ export class ChatSimpleService {
   }
 
   async processStreamingMessage(input: ChatSimpleInputDto): Promise<ReadableStream> {
-    const { message } = input;
+    const { message, conversationId } = input;
 
     // Route the message first
     const routerResult = await this.routerService.routeMessage({

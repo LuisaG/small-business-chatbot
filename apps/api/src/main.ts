@@ -18,6 +18,7 @@ async function bootstrap() {
   await app.register(require('@fastify/helmet'));
   await app.register(require('@fastify/cors'), {
     origin: true,
+    credentials: true,
   });
 
   const port = configService.get('port');
