@@ -11,7 +11,7 @@ export class ChatSimpleService {
   private readonly CELLAR_INFO = {
     businessName: 'The Cellar',
     businessType: 'wine_bar_cafe',
-    businessLocation: 'San Clemente, CA',
+    businessLocation: '156 Avenida Del Mar, San Clemente, CA 92672',
     businessId: 'cellar-sc',
   };
 
