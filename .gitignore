@@ -100,12 +100,16 @@ jspm_packages/
 .DS_Store?
 
 # Database files
+
 *.db
 *.sqlite
 *.sqlite3
 apps/api/*.db
 apps/api/*.sqlite
 apps/api/*.sqlite3
+apps/api/prisma/*.db
+apps/api/prisma/*.sqlite
+apps/api/prisma/*.sqlite3
 ._*
 .Spotlight-V100
 .Trashes
