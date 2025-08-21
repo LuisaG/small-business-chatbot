@@ -13,7 +13,7 @@ import { configuration } from './config/configuration';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '../.env',
+      envFilePath: '../../.env',
       load: [configuration],
     }),
     ThrottlerModule.forRoot([

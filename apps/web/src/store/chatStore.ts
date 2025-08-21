@@ -12,11 +12,13 @@ export interface Message {
 interface ChatSlice {
   messages: Message[];
   hasGreeted: boolean;
+  conversationId: string | null;
   sendMessage: (content: string) => void;
   appendPartial: (id: string, content: string) => void;
   finalizeMessage: (id: string) => void;
   clear: () => void;
   setHasGreeted: (value: boolean) => void;
+  setConversationId: (id: string) => void;
 }
 
 interface UISlice {
@@ -38,6 +40,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
   // Chat slice
   messages: [],
   hasGreeted: false,
+  conversationId: null,
   sendMessage: async (content: string) => {
     const startTime = Date.now();
 
@@ -66,11 +69,13 @@ export const useChatStore = create<ChatStore>((set, get) => ({
       // Use streaming API for real-time response
       await ApiService.sendMessageStream(
         content,
+        get().conversationId,
         (chunk: string) => {
           get().appendPartial(assistantMessage.id, chunk);
         },
-        () => {
+        (conversationId: string) => {
           get().finalizeMessage(assistantMessage.id);
+          get().setConversationId(conversationId);
           const latency = Date.now() - startTime;
           get().setLatency(latency);
         },
@@ -108,8 +113,9 @@ export const useChatStore = create<ChatStore>((set, get) => ({
         msg.id === id ? { ...msg, status: 'done' as const } : msg
       ),
     })),
-  clear: () => set({ messages: [], hasGreeted: false }),
+  clear: () => set({ messages: [], hasGreeted: false, conversationId: null }),
   setHasGreeted: (value: boolean) => set({ hasGreeted: value }),
+  setConversationId: (id: string) => set({ conversationId: id }),
 
   // UI slice
   online: true,

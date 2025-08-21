@@ -2,10 +2,12 @@ import { z } from 'zod';
 
 export const ChatSimpleInputSchema = z.object({
   message: z.string().min(1),
+  conversationId: z.string().optional(),
 });
 
 export const ChatSimpleResponseSchema = z.object({
   response: z.string(),
+  conversationId: z.string(),
   weatherInfo: z.object({
     location: z.string(),
     tempF: z.number(),

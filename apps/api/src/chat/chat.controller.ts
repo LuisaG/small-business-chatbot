@@ -1,8 +1,9 @@
-import { Controller, Post, Body, UsePipes, Res, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Body, UsePipes, Res, HttpStatus, Get, Param } from '@nestjs/common';
 import { FastifyReply } from 'fastify';
 import { ChatService } from './chat.service';
 import { ChatMessageDto, ChatMessageSchema } from './dto/chat.dto';
 import { ZodValidationPipe } from '../common/pipes/zod-validation.pipe';
+import { DatabaseService } from '../database/database.service';
 
 @Controller('chat')
 export class ChatController {

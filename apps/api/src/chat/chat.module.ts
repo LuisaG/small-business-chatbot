@@ -7,9 +7,10 @@ import { ChatSimpleService } from './chat-simple.service';
 import { WeatherModule } from '../weather/weather.module';
 import { RouterModule } from '../router/router.module';
 import { CommonModule } from '../common/common.module';
+import { DatabaseModule } from '../database/database.module';
 
 @Module({
-  imports: [ConfigModule, WeatherModule, RouterModule, CommonModule],
+  imports: [ConfigModule, WeatherModule, RouterModule, CommonModule, DatabaseModule],
   controllers: [ChatController, ChatSimpleController],
   providers: [ChatService, ChatSimpleService],
 })

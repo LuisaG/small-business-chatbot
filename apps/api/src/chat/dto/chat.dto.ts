@@ -5,10 +5,12 @@ export const ChatMessageSchema = z.object({
   businessLocation: z.string().optional(),
   businessName: z.string().optional(),
   businessType: z.string().optional(),
+  conversationId: z.string().optional(),
 });
 
 export const ChatResponseSchema = z.object({
   response: z.string(),
+  conversationId: z.string(),
   weatherInfo: z.object({
     location: z.string(),
     tempF: z.number(),

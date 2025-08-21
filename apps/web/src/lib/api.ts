@@ -2,6 +2,7 @@ const API_BASE_URL = 'http://localhost:3000';
 
 export interface ChatSimpleResponse {
   response: string;
+  conversationId: string;
   weatherInfo?: {
     location: string;
     tempF: number;
@@ -18,6 +19,7 @@ export interface ChatSimpleResponse {
 
 export interface ChatSimpleRequest {
   message: string;
+  conversationId?: string;
 }
 
 export class ApiService {
@@ -54,22 +56,23 @@ export class ApiService {
     }
   }
 
-  static async sendMessage(message: string): Promise<ChatSimpleResponse> {
+  static async sendMessage(message: string, conversationId?: string): Promise<ChatSimpleResponse> {
     return this.makeRequest<ChatSimpleResponse>('/chat-simple', {
       method: 'POST',
-      body: JSON.stringify({ message }),
+      body: JSON.stringify({ message, conversationId }),
     });
   }
 
     static async sendMessageStream(
     message: string,
+    conversationId: string | null,
     onChunk: (chunk: string) => void,
-    onComplete: () => void,
+    onComplete: (conversationId: string) => void,
     onError: (error: Error) => void
   ): Promise<void> {
     try {
       // First try the regular endpoint for now
-      const response = await this.sendMessage(message);
+      const response = await this.sendMessage(message, conversationId || undefined);
 
       // Simulate streaming by sending the response in chunks
       const words = response.response.split(' ');
@@ -78,7 +81,7 @@ export class ApiService {
         await new Promise(resolve => setTimeout(resolve, 50)); // 50ms delay between words
       }
 
-      onComplete();
+      onComplete(response.conversationId);
     } catch (error) {
       console.error('API Error:', error);
       onError(error instanceof Error ? error : new Error('Unknown error'));

@@ -6,13 +6,13 @@ A monorepo containing a NestJS API backend and web frontend for a small business
 
 ```
 small-business-chatbot/
-├── api/                    # NestJS Backend API
-│   ├── src/               # Source code
-│   ├── test/              # Tests
-│   ├── knowledge/         # RAG knowledge base (YAML)
-│   ├── package.json       # API dependencies
-│   └── ...
 ├── apps/
+│   ├── api/               # NestJS Backend API
+│   │   ├── src/           # Source code
+│   │   ├── test/          # Tests
+│   │   ├── knowledge/     # RAG knowledge base (YAML)
+│   │   ├── package.json   # API dependencies
+│   │   └── ...
 │   └── web/               # Frontend application
 │       ├── src/           # Frontend source code
 │       ├── package.json   # Frontend dependencies
@@ -23,7 +23,7 @@ small-business-chatbot/
 
 ## Features
 
-### Backend API (`/api`)
+### Backend API (`/apps/api`)
 
 - **NestJS + Fastify** REST API
 - **Weather Integration** via Tomorrow.io API
@@ -89,7 +89,7 @@ npm run lint             # Lint both projects
 npm run install:all      # Install dependencies for all projects
 ```
 
-### API Commands (from `/api`)
+### API Commands (from `/apps/api`)
 
 ```bash
 npm run start:dev        # Start API in development mode
@@ -146,7 +146,7 @@ OPEN_API_KEY=your_openai_api_key
 **API Only:**
 
 ```bash
-cd api
+cd apps/api
 npm run start:dev
 # API will be available at http://localhost:3000
 ```
@@ -170,7 +170,7 @@ npm run test
 **Run API tests only:**
 
 ```bash
-cd api
+cd apps/api
 npm test
 ```
 
@@ -192,7 +192,7 @@ npm run build
 **Build API only:**
 
 ```bash
-cd api
+cd apps/api
 npm run build
 ```
 
@@ -237,7 +237,7 @@ curl -X POST http://localhost:3000/chat-simple \
 
 ## Knowledge Base
 
-The RAG system uses YAML files in `api/knowledge/`:
+The RAG system uses YAML files in `apps/api/knowledge/`:
 
 ```
 api/knowledge/

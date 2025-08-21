@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { WeatherService } from '../weather/weather.service';
 import { RagService } from '../common/rag/rag.service';
+import { DatabaseService } from '../database/database.service';
 import { ChatMessageDto, ChatResponseDto } from './dto/chat.dto';
 import { Config } from '../config/configuration';
 
@@ -26,10 +27,26 @@ export class ChatService {
     private readonly configService: ConfigService<Config>,
     private readonly weatherService: WeatherService,
     private readonly ragService: RagService,
+    private readonly databaseService: DatabaseService,
   ) {}
 
   async processMessage(chatMessage: ChatMessageDto): Promise<ChatResponseDto> {
-    const { message, businessLocation, businessName, businessType } = chatMessage;
+    const { message, businessLocation, businessName, businessType, conversationId } = chatMessage;
+
+    // Get or create conversation
+    let currentConversationId = conversationId;
+    if (!currentConversationId) {
+      const conversation = await this.databaseService.createConversation();
+      currentConversationId = conversation.id;
+      this.logger.debug(`Created new conversation: ${currentConversationId}`);
+    }
+
+    // Store user message
+    await this.databaseService.addMessage(currentConversationId, 'user', message);
+
+    // Get conversation history for context
+    const conversationHistory = await this.databaseService.getConversationHistory(currentConversationId);
+    this.logger.debug(`Conversation history: ${conversationHistory.length} messages`);
 
     // Determine if weather information is needed
     const needsWeather = this.shouldIncludeWeather(message);
@@ -64,8 +81,12 @@ export class ChatService {
     // Generate response using OpenAI streaming API
     const response = await this.generateResponse(message, systemPrompt);
 
+    // Store assistant response
+    await this.databaseService.addMessage(currentConversationId, 'assistant', response);
+
     return {
       response,
+      conversationId: currentConversationId,
       weatherInfo,
       businessInfo: businessName ? {
         name: businessName,

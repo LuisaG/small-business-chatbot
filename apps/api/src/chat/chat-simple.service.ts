@@ -21,7 +21,7 @@ export class ChatSimpleService {
   ) {}
 
   async processMessage(input: ChatSimpleInputDto): Promise<ChatSimpleResponseDto> {
-    const { message } = input;
+    const { message, conversationId } = input;
 
     // First, route the message to determine what type of query it is
     const routerResult = await this.routerService.routeMessage({
@@ -37,6 +37,7 @@ export class ChatSimpleService {
       businessName: this.CELLAR_INFO.businessName,
       businessType: this.CELLAR_INFO.businessType,
       businessLocation: this.CELLAR_INFO.businessLocation,
+      conversationId,
     });
 
     // Return the simplified response with routing information
