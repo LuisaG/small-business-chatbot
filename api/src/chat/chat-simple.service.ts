@@ -78,12 +78,17 @@ export class ChatSimpleService {
       }
     }
 
+    // Retrieve relevant business information using RAG
+    const relevantChunks = this.chatService['ragService'].retrieveRelevantChunks(message);
+    const businessContext = this.chatService['ragService'].formatChunksForPrompt(relevantChunks);
+
     // Create system prompt
     const systemPrompt = this.chatService['createSystemPrompt'](
       this.CELLAR_INFO.businessName,
       this.CELLAR_INFO.businessType,
       this.CELLAR_INFO.businessLocation,
-      weatherInfo
+      weatherInfo,
+      businessContext
     );
 
     // Generate streaming response

@@ -52,8 +52,11 @@ export class ChatService {
     }
 
     // Retrieve relevant business information using RAG
+    this.logger.debug(`Processing message: "${message}"`);
     const relevantChunks = this.ragService.retrieveRelevantChunks(message);
+    this.logger.debug(`Found ${relevantChunks.length} relevant chunks`);
     const businessContext = this.ragService.formatChunksForPrompt(relevantChunks);
+    this.logger.debug(`Business context: ${businessContext.substring(0, 200)}...`);
 
     // Create system prompt based on available information
     const systemPrompt = this.createSystemPrompt(businessName, businessType, locationToUse, weatherInfo, businessContext);

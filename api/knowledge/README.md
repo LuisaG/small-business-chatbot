@@ -30,12 +30,6 @@ You can also use:
 knowledge/
 ├── cellar-sc/
 │   ├── business-info.yaml
-│   ├── policies.yaml
-│   └── faq.yaml
-├── other-business/
-│   └── ...
-└── shared/
-    └── common-policies.yaml
 ```
 
 ## YAML Benefits

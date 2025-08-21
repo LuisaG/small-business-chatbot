@@ -39,7 +39,11 @@ export class ChatController {
     }
 
     // Create system prompt
-    const systemPrompt = this.chatService['createSystemPrompt'](businessName, businessType, locationToUse, weatherInfo);
+    // Retrieve relevant business information using RAG
+    const relevantChunks = this.chatService['ragService'].retrieveRelevantChunks(message);
+    const businessContext = this.chatService['ragService'].formatChunksForPrompt(relevantChunks);
+
+    const systemPrompt = this.chatService['createSystemPrompt'](businessName, businessType, locationToUse, weatherInfo, businessContext);
 
     try {
       const stream = await this.chatService.generateStreamingResponse(message, systemPrompt);

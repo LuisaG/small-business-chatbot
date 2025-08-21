@@ -6,9 +6,10 @@ import { ChatService } from './chat.service';
 import { ChatSimpleService } from './chat-simple.service';
 import { WeatherModule } from '../weather/weather.module';
 import { RouterModule } from '../router/router.module';
+import { CommonModule } from '../common/common.module';
 
 @Module({
-  imports: [ConfigModule, WeatherModule, RouterModule],
+  imports: [ConfigModule, WeatherModule, RouterModule, CommonModule],
   controllers: [ChatController, ChatSimpleController],
   providers: [ChatService, ChatSimpleService],
 })

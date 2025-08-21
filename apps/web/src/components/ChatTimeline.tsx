@@ -22,7 +22,7 @@ export const ChatTimeline: React.FC = () => {
         const greetingMessage = {
           id: `greeting-${Date.now()}`,
           role: 'assistant' as const,
-          content: "Welcome! I can help with hours, menu highlights, patio & pets, or check the weather at our location.",
+          content: "Hi! You're in the right place. Ask me about hours, menu highlights, patio, or today’s weather.",
           status: 'done' as const,
           timestamp: new Date(),
         };
