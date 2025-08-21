@@ -11,10 +11,11 @@ export const ChatInput: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (message.trim() && !isLoading) {
+      const currentMessage = message.trim();
+      setMessage(''); // Clear input immediately
       setIsLoading(true);
       try {
-        await sendMessage(message.trim());
-        setMessage('');
+        await sendMessage(currentMessage);
       } finally {
         setIsLoading(false);
       }
