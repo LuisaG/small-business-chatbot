@@ -1,45 +1,33 @@
-# Small Business Chatbot Monorepo
+# Small Business Chatbot
 
-A monorepo containing a NestJS API backend and web frontend for a small business chatbot system.
+A production-ready chatbot system for small businesses, featuring a NestJS backend with RAG (Retrieval-Augmented Generation) and a modern React frontend.
 
-## Project Structure
+## Business Context
 
-```
-small-business-chatbot/
-├── apps/
-│   ├── api/               # NestJS Backend API
-│   │   ├── src/           # Source code
-│   │   ├── test/          # Tests
-│   │   ├── knowledge/     # RAG knowledge base (YAML)
-│   │   ├── package.json   # API dependencies
-│   │   └── ...
-│   └── web/               # Frontend application
-│       ├── src/           # Frontend source code
-│       ├── package.json   # Frontend dependencies
-│       └── ...
-├── package.json           # Monorepo root package.json
-└── README.md             # This file
-```
+This chatbot is designed for **The Cellar**, a wine bar and café located at 156 Avenida Del Mar, San Clemente, CA. The system provides intelligent responses about:
 
-## Features
+- **Business Information**: Hours, menu highlights, policies, amenities
+- **Weather Integration**: Current weather conditions at the business location
+- **Conversation History**: Persistent chat sessions using SQLite database
+- **Intelligent Routing**: Automatically determines if queries are about business info, weather, or both
 
-### Backend API (`/apps/api`)
+## Architecture
 
-- **NestJS + Fastify** REST API
-- **Weather Integration** via Tomorrow.io API
-- **RAG System** with YAML knowledge base
-- **Intelligent Routing** for weather vs business queries
-- **OpenAI Integration** for natural language responses
-- **Caching** with TTL for performance
-- **Rate Limiting** and security middleware
-- **Structured Logging** with Pino
+### Backend (NestJS + Fastify)
 
-### Frontend (`/apps/web`)
+- **Framework**: NestJS with Fastify adapter for high performance
+- **Database**: SQLite with Prisma ORM for conversation persistence
+- **RAG System**: YAML-based knowledge base for business information
+- **APIs**: OpenAI GPT-4 for natural language generation, Tomorrow.io for weather data
+- **Caching**: In-memory TTL cache for weather and geocoding data
+- **Security**: Helmet, CORS, rate limiting, input validation with Zod
 
-- **Modern Web Application**
-- **Real-time Chat Interface**
-- **Responsive Design**
-- **TypeScript Support**
+### Frontend (React + TypeScript)
+
+- **Framework**: React with TypeScript
+- **UI Library**: Material-UI with custom theme
+- **State Management**: Zustand for chat state
+- **Real-time Streaming**: Server-Sent Events for live response streaming
 
 ## Quick Start
 
@@ -50,201 +38,186 @@ small-business-chatbot/
 
 ### Installation
 
-1. **Clone the repository**
+1. **Clone and install dependencies**
 
    ```bash
    git clone <repository-url>
    cd small-business-chatbot
-   ```
-
-2. **Install all dependencies**
-
-   ```bash
    npm run install:all
    ```
 
-3. **Set up environment variables**
+2. **Set up environment variables**
 
    ```bash
-
+   cp apps/api/env.example .env
    # Edit .env with your API keys
    ```
 
-4. **Start both frontend and backend**
+3. **Initialize database**
+
    ```bash
-   npm run dev
+   cd apps/api
+   npx prisma migrate dev --name init
    ```
 
-## Available Scripts
+4. **Start the application**
 
-### Monorepo Commands (from root)
+   ```bash
+   # From root directory - starts both frontend and backend
+   npm run dev
 
-```bash
-npm run dev              # Start both API and web app
-npm run dev:api          # Start only the API
-npm run dev:web          # Start only the web app
-npm run build            # Build both projects
-npm run test             # Run tests for both projects
-npm run lint             # Lint both projects
-npm run install:all      # Install dependencies for all projects
+   # Or start individually:
+   npm run dev:api    # Backend only (port 3000)
+   npm run dev:web    # Frontend only (port 3001)
+   ```
+
+## Environment Variables
+
+Create a `.env` file in the root directory:
+
+```env
+# Server Configuration
+PORT=3000
+CACHE_TTL_SECONDS=120
+
+# Geocoding (Nominatim)
+NOMINATIM_USER_AGENT=small-business-chatbot/1.0 (your-email@example.com)
+
+# Weather API (Tomorrow.io)
+TOMORROW_API_KEY=your_tomorrow_io_api_key
+TOMORROW_FIELDS=temperature,weatherCode
+
+# OpenAI API
+OPEN_API_KEY=your_openai_api_key
+
+# Database
+DATABASE_URL="file:./apps/api/dev.db"
 ```
 
-### API Commands (from `/apps/api`)
+### Required API Keys
 
-```bash
-npm run start:dev        # Start API in development mode
-npm run build            # Build the API
-npm run test             # Run API tests
-npm run test:e2e         # Run API integration tests
-npm run lint             # Lint API code
+1. **Tomorrow.io** - Weather data provider
+
+   - Sign up at [tomorrow.io](https://www.tomorrow.io/)
+   - Free tier includes 1000 calls/month
+
+2. **OpenAI** - Language model for responses
+   - Sign up at [platform.openai.com](https://platform.openai.com/)
+   - Requires billing setup for GPT-4 access
+
+## Project Structure
+
 ```
-
-### Web Commands (from `/apps/web`)
-
-```bash
-npm run dev              # Start web app in development mode
-npm run build            # Build the web app
-npm run test             # Run web app tests
-npm run lint             # Lint web app code
+small-business-chatbot/
+├── apps/
+│   ├── api/                    # NestJS Backend
+│   │   ├── src/
+│   │   │   ├── chat/          # Chat endpoints and logic
+│   │   │   ├── weather/       # Weather API integration
+│   │   │   ├── router/        # Message routing logic
+│   │   │   ├── database/      # Prisma database service
+│   │   │   └── common/        # Shared services (RAG, cache, HTTP)
+│   │   ├── knowledge/         # YAML business information
+│   │   └── prisma/           # Database schema
+│   └── web/                   # React Frontend
+│       ├── src/
+│       │   ├── components/    # Chat UI components
+│       │   ├── store/         # Zustand state management
+│       │   └── lib/           # API client
+│       └── public/            # Static assets
+└── package.json               # Monorepo scripts
 ```
 
 ## API Endpoints
 
 ### Chat Endpoints
 
-- `POST /chat-simple` - Simplified chat (UI-friendly)
+- `POST /chat-simple` - Simplified chat for UI
 - `POST /chat-simple/stream` - Streaming chat response
 - `POST /chat` - Full chat with all options
 - `POST /chat/stream` - Streaming chat with all options
-
-### Router Endpoint
-
-- `POST /router` - Intelligent message routing
 
 ### Utility Endpoints
 
 - `GET /health` - Health check
 - `GET /weather` - Weather information
-
-## Environment Variables
-
-Create `.env` in the root directory with:
-
-```env
-PORT=3000
-CACHE_TTL_SECONDS=120
-NOMINATIM_USER_AGENT=small-business-chatbot/1.0 (your-email@example.com)
-TOMORROW_API_KEY=your_tomorrow_io_api_key
-TOMORROW_FIELDS=temperature,weatherCode
-OPEN_API_KEY=your_openai_api_key
-```
+- `POST /router` - Message routing logic
 
 ## Development
 
-### Running Individual Services
-
-**API Only:**
+### Running Tests
 
 ```bash
-cd apps/api
-npm run start:dev
-# API will be available at http://localhost:3000
-```
-
-**Web Only:**
-
-```bash
-cd apps/web
-npm run dev
-# Web app will be available at http://localhost:3001 (or next available port)
-```
-
-### Testing
-
-**Run all tests:**
-
-```bash
+# All tests
 npm run test
+
+# Backend tests only
+cd apps/api && npm test
+
+# Frontend tests only
+cd apps/web && npm test
 ```
 
-**Run API tests only:**
+### Database Management
 
 ```bash
 cd apps/api
-npm test
-```
 
-**Run web tests only:**
+# View database
+npx prisma studio
 
-```bash
-cd apps/web
-npm test
+# Reset database
+npx prisma migrate reset --force
+
+# Generate Prisma client
+npx prisma generate
 ```
 
 ### Building for Production
 
-**Build everything:**
-
 ```bash
+# Build everything
 npm run build
+
+# Build backend only
+cd apps/api && npm run build
+
+# Build frontend only
+cd apps/web && npm run build
 ```
 
-**Build API only:**
+## Key Features
 
-```bash
-cd apps/api
-npm run build
-```
+### Intelligent Message Routing
 
-**Build web only:**
+The system automatically categorizes user queries:
 
-```bash
-cd apps/web
-npm run build
-```
+- **Weather**: Temperature, forecast, conditions
+- **Business**: Hours, menu, policies, amenities
+- **Both**: Queries requiring both weather and business info
+- **Fallback**: Unclear or out-of-scope queries
 
-## API Documentation
+### RAG Knowledge Base
 
-### Chat Simple Endpoint
+Business information is stored in YAML format (`apps/api/knowledge/cellar-sc/business-info.yaml`) and includes:
 
-The main endpoint for the UI:
+- Operating hours
+- Menu highlights
+- Policies (reservations, pets, etc.)
+- Amenities and features
+- Contact information
 
-```bash
-curl -X POST http://localhost:3000/chat-simple \
-  -H "Content-Type: application/json" \
-  -d '{"message": "What is the weather like today?"}'
-```
+### Real-time Streaming
 
-**Response:**
+Responses stream word-by-word for better user experience, using OpenAI's streaming API.
 
-```json
-{
-  "response": "It is currently 72°F in San Clemente.",
-  "weatherInfo": {
-    "location": "San Clemente, CA",
-    "tempF": 72,
-    "tempC": 22
-  },
-  "businessInfo": {
-    "name": "The Cellar",
-    "location": "San Clemente, CA",
-    "type": "wine_bar_cafe"
-  },
-  "route": "weather",
-  "business_facets": []
-}
-```
+### Conversation Persistence
 
-## Knowledge Base
+All conversations are stored in SQLite database with:
 
-The RAG system uses YAML files in `apps/api/knowledge/`:
-
-```
-api/knowledge/
-├── cellar-sc/
-│   └── business-info.yaml    # The Cellar business information
-└── README.md                 # Knowledge base documentation
-```
+- Conversation tracking
+- Message history
+- Timestamp logging
 
 ## Contributing
 
