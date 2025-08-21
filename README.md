@@ -4,7 +4,12 @@ A production-ready chatbot system for small businesses, featuring a NestJS backe
 
 ## Business Context
 
-This chatbot is designed for **The Cellar**, a wine bar and café located at 156 Avenida Del Mar, San Clemente, CA. The system provides intelligent responses about:
+This chatbot is designed for **The Cellar**, a wine bar and café located at 156 Avenida Del Mar, San Clemente, CA.
+
+**About The Cellar:**
+The Cellar is my go-to coffee shop for getting work done! It's pretty cool how it transforms throughout the day - it opens as a peaceful coffee shop at 11:00 AM with great coffee and a quiet atmosphere perfect for focusing, then later transforms into a restaurant/brunch place. During those morning hours when it's just opening up, it's super peaceful and not crowded at all, making it the perfect spot for remote work.
+
+The system provides intelligent responses about:
 
 - **Business Information**: Hours, menu highlights, policies, amenities
 - **Weather Integration**: Current weather conditions at the business location
